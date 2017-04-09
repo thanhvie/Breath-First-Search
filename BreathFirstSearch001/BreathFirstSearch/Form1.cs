@@ -27,9 +27,7 @@ namespace BreathFirstSearch
       
 
         //Declare global variables
-        OpenFileDialog htv1 = new OpenFileDialog();
-        RootObject root = new RootObject();
-        Movie[] movies = null;
+       
         Graph g_graph = new Graph();
         
 
@@ -41,6 +39,10 @@ namespace BreathFirstSearch
         {
             try
             {
+                OpenFileDialog htv1 = new OpenFileDialog();
+                RootObject root = new RootObject();
+                Movie[] movies = null;
+
                 if (htv1.ShowDialog() == DialogResult.OK)
                 {
                     path_json_file = htv1.FileName;
@@ -121,8 +123,10 @@ namespace BreathFirstSearch
         {
             try
             {
+
                 //reset g_graph
                 g_graph.reset();
+                bool found = false;
 
                 Node start = g_graph.setStart(cbx1.Text);
                 Node end = g_graph.setEnd(cbx2.Text);
@@ -138,6 +142,7 @@ namespace BreathFirstSearch
                     if (current == end)
                     {
                         MessageBox.Show("Found Path");
+                        found = true;
                         break;
                     }
 
@@ -153,6 +158,11 @@ namespace BreathFirstSearch
                             queue.Enqueue(neighbor);
                         }
                     }
+                }
+
+                if((queue.Count == 0) && (found == true))
+                {
+                    MessageBox.Show("Cannot find the path");
                 }
             }
             catch (Exception ex)

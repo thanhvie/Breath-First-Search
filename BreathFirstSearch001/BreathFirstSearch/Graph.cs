@@ -28,6 +28,8 @@ namespace BreathFirstSearch
                 nodes[i].searched = false;
                 nodes[i].parent = null;
             }
+
+            //nodes.Clear();
         }
 
         public Node setStart(string actor)
