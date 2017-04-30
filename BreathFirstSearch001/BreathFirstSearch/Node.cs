@@ -21,12 +21,16 @@ namespace BreathFirstSearch
             parent = null;
         }
 
+        public void reset()
+        {
+            searched = false;
+            parent = null;
+        }
+
         public void addEdge(Node neighbor)
         {
             edges.Add(neighbor);
             neighbor.edges.Add(this);
         }
-
-        
     }
 }

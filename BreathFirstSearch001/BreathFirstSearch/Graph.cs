@@ -25,11 +25,13 @@ namespace BreathFirstSearch
         {
             for(int i = 0; i<nodes.Count; i++)
             {
-                nodes[i].searched = false;
-                nodes[i].parent = null;
+                nodes[i].reset();
+                var edges = nodes[i].edges;
+                for(int j = 0; j < edges.Count; j++)
+                {
+                    edges[j].reset();
+                }
             }
-
-            //nodes.Clear();
         }
 
         public Node setStart(string actor)

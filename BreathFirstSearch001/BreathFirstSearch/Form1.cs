@@ -24,24 +24,30 @@ namespace BreathFirstSearch
         string path_json_file = "";
         string path_directory = "";
         string path_filename = "";
-      
 
-        //Declare global variables
-       
-        Graph g_graph = new Graph();
-        
 
-        /*get JSON and put data into hash table
-        hashtable(key = "movie" or "actor" value,
-        value = Node according to key value*/
+        //Declare global Graph object call g_graph
+        Graph g_graph;
 
+        //declare BFS object
+        BFS bfs = new BFS();
+
+
+        /*load JSON file and put data into hash table
+        hashtable(key = "movie" or "actor" string value,
+        value = Node object*/
+        #region LoadData
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
             {
                 OpenFileDialog htv1 = new OpenFileDialog();
+
+                /*declare RootObject and Movie object in order to 
+                get data from JSON file*/
                 RootObject root = new RootObject();
                 Movie[] movies = null;
+                g_graph = new Graph();
 
                 if (htv1.ShowDialog() == DialogResult.OK)
                 {
@@ -51,21 +57,29 @@ namespace BreathFirstSearch
                     tb1.Text = path_json_file;
                 }
 
+                //JSON data will be stored in root
                 root = JsonConvert.DeserializeObject<RootObject>(File.ReadAllText(path_json_file));
+
+                //get movie objects and store them into an array
                 movies = root.movies.ToArray();
 
+                //for each movie object, do the following loop
                 for (int i = 0; i < movies.Length; i++)
                 {
-                    //create new movie node
+                    //assign new value for (movieTitle, titleNode) 
                     string movieTitle = movies[i].title;
                     Node titleNode = new Node(movieTitle);
 
+                    //extract all movie's actors and put into list
                     List<string> cast = movies[i].cast;
+
+                    //declare a new list<node>
                     List<Node> nodes = new List<Node>();
 
-                    //add movieTitle to hashtable
+                    //add new (movieTitle, titleNode) into hashtable
                     g_graph.graph.Add(movieTitle, titleNode);
 
+                    //for each movie actor, do the following
                     for (int j = 0; j < cast.Count; j++)
                     {
                         string actor = cast[j];
@@ -83,14 +97,18 @@ namespace BreathFirstSearch
                             //add new node into list of nodes
                             g_graph.nodes.Add(m_actorNode);
 
-                            //add edges             
+                            //add edges for titleNode            
                             titleNode.addEdge(m_actorNode);
 
-                            //add node to hashtable
+                            //add (actor,m_actorNode) into hashtable
                             g_graph.graph.Add(actor, m_actorNode);
 
                         }
 
+                        /*if actor name has already appeared before,
+                        we will not create a new node for that actor.
+                        Instead, we will scan which node represent for the actor
+                        and add that node as edge for the movie node*/
                         else
                         {
                             foreach (Node n in g_graph.nodes)
@@ -105,7 +123,7 @@ namespace BreathFirstSearch
                     }
                 }
 
-                //display all actor name to cbx
+                //display all actors name to combobox cbx
                 for (int i = 0; i < g_graph.nodes.Count; i++)
                 {
                     cbx1.Items.Add(g_graph.nodes[i].value);
@@ -117,80 +135,13 @@ namespace BreathFirstSearch
                 MessageBox.Show("An error has occured: " + ex);
             }
         }
+        #endregion
 
-
-        private void cbx2_SelectedIndexChanged(object sender, EventArgs e)
+        #region btnSearch_Click
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            try
-            {
-
-                //reset g_graph
-                g_graph.reset();
-                bool found = false;
-
-                Node start = g_graph.setStart(cbx1.Text);
-                Node end = g_graph.setEnd(cbx2.Text);
-
-                Queue<Node> queue = new Queue<Node>();
-                start.searched = true;
-                queue.Enqueue(start);
-
-                while (queue.Count > 0)
-                {
-                    Node current = queue.Dequeue();
-
-                    if (current == end)
-                    {
-                        MessageBox.Show("Found Path");
-                        found = true;
-                        break;
-                    }
-
-                    List<Node> edges = current.edges;
-
-                    for (int i = 0; i < edges.Count; i++)
-                    {
-                        Node neighbor = edges[i];
-                        if (neighbor.searched == false)
-                        {
-                            neighbor.searched = true;
-                            neighbor.parent = current;
-                            queue.Enqueue(neighbor);
-                        }
-                    }
-                }
-
-                if((queue.Count == 0) && (found == true))
-                {
-                    MessageBox.Show("Cannot find the path");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error has occured: " + ex);
-            }
+            bfs.bfs(g_graph, cbx1, cbx2, tbPath);
         }
-
-        public void fpath (Node start, Node end, ref string path)
-        {
-            path = path + " " + end.value;
-            
-            if(start.value == end.value)
-            {
-                MessageBox.Show("Found Connection Path");
-                return;
-            }
-
-            end = end.parent;
-            fpath(start, end, ref path);
-        }
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string s = null;
-            fpath(g_graph.setStart(cbx1.Text), g_graph.setEnd(cbx2.Text),ref s);
-            tbPath.Text = s;
-        }
+        #endregion
     }
 }

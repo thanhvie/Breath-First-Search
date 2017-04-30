@@ -60,6 +60,7 @@
             // 
             // tb1
             // 
+            this.tb1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tb1.Location = new System.Drawing.Point(209, 34);
             this.tb1.Multiline = true;
             this.tb1.Name = "tb1";
@@ -75,7 +76,7 @@
             this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "Search Path";
             this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.button1_Click);
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // lblStartNode
             // 
@@ -105,10 +106,10 @@
             this.cbx2.Name = "cbx2";
             this.cbx2.Size = new System.Drawing.Size(244, 28);
             this.cbx2.TabIndex = 6;
-            this.cbx2.SelectedIndexChanged += new System.EventHandler(this.cbx2_SelectedIndexChanged);
             // 
             // tbPath
             // 
+            this.tbPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbPath.Location = new System.Drawing.Point(36, 144);
             this.tbPath.Multiline = true;
             this.tbPath.Name = "tbPath";
@@ -129,7 +130,7 @@
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.cbx1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Breath First Search";
             this.ResumeLayout(false);
             this.PerformLayout();
 
